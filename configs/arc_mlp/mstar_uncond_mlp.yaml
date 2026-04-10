@@ -1,0 +1,36 @@
+model_name: mstar_uncond_mlp
+figure_path: ./results/Samples/ mstar_uncond_mlp
+
+epochs: 1000
+batch_size: 128
+lr: 0.00005
+loss: 1ser
+
+clf:
+  arch: mlp
+  hidden_dims: [512, 512, 512]
+  input_length: 200
+  cond_dim: 48
+  mod_ch: 32         # backbone plus large
+  ch_mul: [1, 2, 3, 4]  # +1 niveau de downsampling
+  num_res: 2         # plus de blocs résiduels par niveau
+  emb_dim: 192
+  dropout: 0.05
+  use_bn: true
+  use_ln: false
+  
+dataset: MSTAR
+data_path: "data/MSTAR_hrrp.pkl"
+split:
+  val_size: 0.15
+  test_size: 0.15
+  stratified: true
+  cv_folds: 5
+  fold_index: 0
+inf_mode: step
+inf_every_n_step: 2000
+inf_every_n_epoch: 1
+
+conditionned:
+  bool: 0
+  cond_op: film # film or concat

@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "clf_req_asp"
+version = "0.1.0"
+description = "Conditional HRRP classification with Kalman-based aspect-angle estimation"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "Your Name", email = "your.email@example.com"}]
+keywords = ["hrrp", "classification", "kalman", "conditional", "pytorch"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "torch>=2.0.0",
+    "pytorch-lightning>=2.0.0",
+    "torchmetrics>=0.11.0",
+    "torchvision>=0.15.0",
+    "numpy>=1.21.0",
+    "pandas>=1.3.0",
+    "scikit-learn>=0.24.0",
+    "pyyaml>=5.4.0",
+    "tqdm>=4.60.0",
+    "matplotlib>=3.3.0",
+    "Pillow>=9.0.0",
+    "scikit-image>=0.19.0",
+    "timm>=0.9.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/your-username/clf_req_asp"
+Documentation = "https://github.com/your-username/clf_req_asp#readme"
+Repository = "https://github.com/your-username/clf_req_asp.git"
+Issues = "https://github.com/your-username/clf_req_asp/issues"
+
+[tool.setuptools]
+packages = ["clf_req_asp"]
+package-dir = {"" = "src"}
+
+[tool.setuptools.package-data]
+clf_req_asp = []
