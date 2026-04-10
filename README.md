@@ -1,12 +1,12 @@
 # Aspect-Angle-Aware HRRP Classification
 
-Reproducibility repository for the paper experiments on HRRP (High-Resolution Range Profile) classification with explicit conditioning on viewing/aspect angle.
+Reproducibility repository for the paper experiments on HRRP (High-Resolution Range Profile) classification with explicit conditioning on aspect angle.
 
 ## Paper at a glance
 
 This repository accompanies the paper **"High-Resolution Range Profile Classifiers Require Aspect-Angle Awareness"**, submitted at EUSIPCO26.
 
-The core message is about **classification**, not angle estimation itself: HRRP classifiers perform significantly better when viewing angle is used as an explicit conditioning variable.
+The core message is about **classification**: HRRP classifiers perform significantly better when aspect angle is used as an explicit conditioning variable.
 
 In our experiments, we compare unconditioned baselines vs. angle-aware variants (FiLM / CBN / concatenation) across multiple backbones. The paper reports a consistent gain in classification performance, with an average accuracy improvement of about **7%** and gains up to **10%** on some setups.
 
