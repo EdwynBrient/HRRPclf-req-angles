@@ -1,15 +1,22 @@
-# Conditional Aspect-Angle Estimation via Kalman Filtering
+# Aspect-Angle-Aware HRRP Classification
 
-A PyTorch Lightning-based classification framework for HRRP (High-Resolution Range Profile) radar data with conditional aspect-angle estimation using Kalman filtering.
+Reproducibility repository for the paper experiments on HRRP (High-Resolution Range Profile) classification with explicit conditioning on viewing/aspect angle.
+
+## Paper at a glance
+
+This repository accompanies the paper **"High-Resolution Range Profile Classifiers Require Aspect-Angle Awareness"**, submitted at EUSIPCO26.
+
+The core message is about **classification**, not angle estimation itself: HRRP classifiers perform significantly better when viewing angle is used as an explicit conditioning variable.
+
+In our experiments, we compare unconditioned baselines vs. angle-aware variants (FiLM / CBN / concatenation) across multiple backbones. The paper reports a consistent gain in classification performance, with an average accuracy improvement of about **7%** and gains up to **10%** on some setups.
 
 ## Overview
 
-This repository implements:
-- **Aspect-angle estimation** from 2D position tracks using an adaptive Kalman filter
-- **Conditional classification** of HRRP radar signatures with aspect angle as a conditioning signal
-- **Multiple architectures**: ResNet, CNN, LSTM, MLP backbones
-- **Flexible conditioning mechanisms**: FiLM, concatenation (cat), and CBN
-- **Stratified train/val/test splitting** and cross-validation support
+This repository is intended to reproduce the paper results:
+- **Conditional HRRP classification** with aspect-angle-aware models
+- **Experiment configs used in the study** (ResNet/CNN/MLP variants, conditioning modes)
+- **Train/validation/test evaluation workflow** matching the reported setup
+- **Kalman-based aspect-angle notebook** for secondary analysis and reproducibility checks
 
 ## Quick Start
 
@@ -24,14 +31,22 @@ pip install -e .
 ### Training
 
 ```bash
-python src/clf_req_asp/train.py --config configs/mstar/resnet_film.yaml --seed 42
+python src/clf_req_asp/train.py --config configs/arc_res/mstar_film.yaml --seed 42
 ```
+
+Time-series HRRP (multi-profile sequence) training:
+
+```bash
+python src/clf_req_asp_ts/train.py --config configs_ts/ships_lstm_angle.yaml --seed 42
+```
+
+This command is provided for experiment reproduction (not as a general-purpose training framework).
 
 ### Configuration
 
-Training parameters are managed via YAML files in `configs/`:
+Training parameters are managed via YAML files in `configs/` and `configs_ts/`:
 - **Dataset**: MSTAR (10-class HRRP classification)
-- **Model**: ResNet, CNN, LSTM, or MLP architecture
+- **Model**: ResNet/CNN/MLP (single HRRP) or temporal GRU/LSTM/Transformer (HRRP sequences)
 - **Conditioning**: Enable/disable aspect-angle conditioning
 - **Mechanism**: FiLM, concatenation, or CBN
 
@@ -41,19 +56,39 @@ See `configs/default.yaml` for all available options.
 
 ```
 .
-├── src/clf_req_asp/             # Main package
+├── src/clf_req_asp/             # Single-HRRP package (paper baselines + conditioned variants)
 │   ├── models.py               # PyTorch model definitions
 │   ├── train.py                # PyTorch Lightning training script
 │   └── utils.py                # Data utilities and splitting
+├── src/clf_req_asp_ts/          # Time-series HRRP package (multi-profile sequences)
+│   ├── models.py
+│   ├── dataset.py
+│   ├── train.py
+│   └── utils.py
 │
 ├── configs/                     # Configuration files
 │   ├── default.yaml            # Default config template
-│   ├── mstar/
-│   │   └── resnet_film.yaml   # ResNetRP with FiLM
+│   ├── arc_res/                # ResNetRP configs (MSTAR)
+│   │   ├── mstar_film.yaml
+│   │   ├── mstar_cbn.yaml
+│   │   └── mstar_uncond.yaml
 │   ├── arc_mlp/
-│   │   └── mlp_uncond.yaml    # MLP baseline
+│   │   ├── mstar_film_mlp.yaml
+│   │   ├── mstar_cbn_mlp.yaml
+│   │   └── mstar_uncond_mlp.yaml
 │   └── arc_convs/
-│       └── conv1d_film.yaml   # 1D CNN with FiLM
+│       ├── mstar_film_cnn.yaml
+│       ├── mstar_cbn_cnn.yaml
+│       └── mstar_uncond_cnn.yaml
+├── configs_ts/                  # Time-series configs (GRU/LSTM/Transformer)
+│   ├── ships_lstm_angle.yaml
+│   ├── ships_gru_angle.yaml
+│   ├── ships_transformer_angle.yaml
+│   ├── mstar_lstm_angle.yaml
+│   ├── mstar_gru_angle.yaml
+│   └── mstar_transformer_angle.yaml
+│
+├── aspect_estimation.ipynb      # Kalman-focused experiment notebook
 │
 ├── README.md                    # This file
 ├── LICENSE                      # MIT License
@@ -63,12 +98,18 @@ See `configs/default.yaml` for all available options.
 
 ## Models
 
-All classifiers support optional aspect-angle conditioning:
+All classifiers support optional aspect-angle conditioning.
+
+Single-HRRP package (`src/clf_req_asp`):
 
 - **ResNetRP**: Residual network with adaptive conditioning
 - **Conv1dBackbone**: Lightweight 1D convolutional model
-- **LSTMBackbone**: Recurrent sequence model
 - **MLPBackbone**: Fully connected baseline
+
+Time-series package (`src/clf_req_asp_ts`):
+- **ResNetRP + GRU** temporal aggregation
+- **ResNetRP + LSTM** temporal aggregation
+- **ResNetRP + Transformer** temporal aggregation
 
 Conditioning strategies:
 - **FiLM**: Feature-wise Linear Modulation (scale + shift)
@@ -84,9 +125,18 @@ Conditioning strategies:
 
 ## Data
 
-This work uses MSTAR HRRP data:
-- Pre-processed pickle format: `train_hrrp_dataframe_mean.pkl`
-- Configure path in `configs/mstar/resnet_film.yaml` (field: `data_path`)
+This work uses local data files under `data/`:
+- `data/MSTAR_hrrp.pkl` for MSTAR experiments (`dataset: MSTAR`, key: `data_path`)
+- `data/ship_hrrp.pt` for ship HRRP experiments (`dataset: ships`, key: `path_rp`)
+
+The time-series package can directly consume `data/ship_hrrp.pt` via `path_rp`.
+
+Example MSTAR config: `configs/arc_res/mstar_film.yaml`
+
+## Kalman notebook
+
+`aspect_estimation.ipynb` is included for Kalman-specific experiments and reproducibility checks on aspect-angle estimation.  
+The main reproducibility runs are executed with `src/clf_req_asp/train.py` and the YAML files under `configs/`.
 
 ## Training & Evaluation
 
@@ -111,5 +161,13 @@ MIT License — see [LICENSE](LICENSE) for details.
 If you use this code, please cite:
 
 ```bibtex
-[Add your paper details here]
+@misc{brient2026highresolutionrangeprofileclassifiers,
+	title={High-Resolution Range Profile Classifiers Require Aspect-Angle Awareness}, 
+	author={Edwyn Brient and Santiago Velasco-Forero and Rami Kassab},
+	year={2026},
+	eprint={2603.00087},
+	archivePrefix={arXiv},
+	primaryClass={eess.SP},
+	url={https://arxiv.org/abs/2603.00087}, 
+}
 ```
