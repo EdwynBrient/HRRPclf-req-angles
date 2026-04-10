@@ -1,0 +1,67 @@
+dataset: ships
+model_name: ships_transformer_angle
+path_rp: data/ship_hrrp.pt
+viewing_angle_source: real
+batch_size: 64
+epochs: 30
+min_epochs: 1
+lr: 1e-4
+lr_scheduler: cosine
+device: gpu
+figure_path: results ships_transformer_angle
+gradient_clip_val: 0.5
+num_classes: 30
+va_jitter_std: 0.04
+random_subsequence: false
+split:
+  val_size: 0.2
+  test_size: 0.2
+  stratified: false
+  generalize: 0
+  cv_folds: 0
+  fold_index: 0
+  time_disjoint: false
+  no_overlap: true
+mmsi_selection:
+  mode: angle_dense_length_prune
+  n: 30
+  min_samples: 1
+  angle_bins: 12
+  bin_width: 20
+  max_per_bin: 4
+  seed: 42
+min_mmsi_samples: 1
+sequence_length: 2
+sequence_stride: 1
+sequence_order_col: unix_seconds
+conditionned:
+  bool: true
+  cond_op: cbn
+  cond_levels: [0, 1, 2]
+clf:
+  emb_dim: 128
+  ch_mul: [1, 2, 3, 4]
+  mod_ch: 32
+  num_res: 3
+  dropout: 0.2
+  cond_levels: [0, 1, 2]
+temporal:
+  type: transformer
+  d_model: 256
+  nhead: 4
+  num_layers: 2
+  pooling: cls
+  dim_feedforward: 1024
+  dropout: 0.2
+global_feature: null
+global_feature_include_meta: false
+early_stopping:
+  monitor: val_loss
+  mode: min
+  patience: 10
+  patience_epochs: 10
+ablations:
+  input_mode: sequence
+  cond_fusion: none
+dropout: 0.2
+hrrp_noise_std: 0.0

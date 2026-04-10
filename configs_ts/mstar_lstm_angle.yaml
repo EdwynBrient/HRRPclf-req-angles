@@ -1,0 +1,52 @@
+dataset: MSTAR
+model_name: mstar_lstm_angle
+data_path: data/MSTAR_hrrp.pkl
+batch_size: 128
+epochs: 30
+min_epochs: 1
+lr: 1e-4
+lr_scheduler: cosine
+device: gpu
+figure_path: results mstar_lstm_angle
+gradient_clip_val: 0.5
+num_classes: 10
+va_jitter_std: 0.04
+split:
+  val_size: 0.1
+  test_size: 0.1
+  stratified: true
+  generalize: 0
+  cv_folds: 0
+  fold_index: 0
+conditionned:
+  bool: true
+  cond_op: cbn
+  cond_levels: [0, 1, 2]
+clf:
+  emb_dim: 128
+  ch_mul: [1, 2, 3, 4]
+  mod_ch: 32
+  num_res: 3
+  dropout: 0.2
+  cond_levels: [0, 1, 2]
+sequence_length: 1
+sequence_stride: 1
+random_subsequence: false
+temporal:
+  type: lstm
+  hidden_dim: 192
+  num_layers: 2
+  bidirectional: true
+  dropout: 0.2
+global_feature: null
+global_feature_include_meta: false
+early_stopping:
+  monitor: val_loss
+  mode: min
+  patience: 10
+  patience_epochs: 10
+ablations:
+  input_mode: sequence
+  cond_fusion: none
+dropout: 0.2
+hrrp_noise_std: 0.0
