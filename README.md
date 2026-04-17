@@ -150,7 +150,6 @@ Metrics logged to:
 
 - **Kalman Filtering**: Constant-velocity state model with adaptive process noise
 - **Conditioning**: FiLM (Perez et al., 2018), CBN (De Vries et al., 2017)
-- **Aspect Angle**: Estimated from velocity heading and radar line-of-sight angle
 
 ## License
 
