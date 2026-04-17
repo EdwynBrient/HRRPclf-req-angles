@@ -14,7 +14,7 @@ In our experiments, we compare unconditioned baselines vs. angle-aware variants 
 
 This repository is intended to reproduce the paper results:
 - **Conditional HRRP classification** with aspect-angle-aware models
-- **Experiment configs used in the study** (ResNet/CNN/MLP variants (single view), conditioning modes, GRU/LSTM/Transformer (multi-view))
+- **Experiment configs used in the study** (ResNet/CNN/MLP variants (single view), conditioning modes, GRU/LSTM/Transformer (multi-view)
 - **Train/validation/test evaluation workflow** matching the reported setup
 - **Kalman-based aspect-angle notebook** for secondary analysis and reproducibility checks
 
