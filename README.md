@@ -129,7 +129,7 @@ This work uses local data files under `data/`:
 - `data/MSTAR_hrrp.pkl` for MSTAR experiments (`dataset: MSTAR`, key: `data_path`)
 - `data/ship_hrrp.pt` for ship HRRP experiments (`dataset: ships`, key: `path_rp`)
 
-The time-series package can directly consume `data/ship_hrrp.pt` via `path_rp`.
+The time-series package can directly consume `data/ship_hrrp.pt` via `path_rp`. The MSTAR preprocessing pipeline used to generate `MSTAR_hrrp.pkl` is available at https://github.com/EdwynBrient/MSTAR-HRRP.
 
 Example MSTAR config: `configs/arc_res/mstar_film.yaml`
 
